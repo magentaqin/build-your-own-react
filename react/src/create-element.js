@@ -20,8 +20,8 @@ export const createVNode = (type,props,key,ref) => {
     constructor: undefined
   }
 
-  // TODO. DO NOT KNOW WHY.
-  // if (options.vnode) options.vnode(vnode);
+  // TODO:. DO NOT KNOW WHY.
+  if (options.vnode) options.vnode(vnode);
   return vnode;
 }
 
@@ -43,6 +43,7 @@ export const createElement = (type, props, children) => {
     }
   }
 
+  // UPDATE SOURCE CODE. HAD BETTER NOT MUTATE PARAMS PASSED.
   // treat arguments[2...n] as normalizedChildren
   if (children !== null) {
     for (i = 2; i < arguments.length; i++) {
@@ -52,7 +53,7 @@ export const createElement = (type, props, children) => {
   }
 
   /**
-   *  TODO. defaultProps role?
+   *  TODO:. defaultProps role?
    */
   // type maybe string or undefined. filter out this case and apply defaultProps to normalizedProps
   if (typeof type === 'function' && type.defaultProps) {
