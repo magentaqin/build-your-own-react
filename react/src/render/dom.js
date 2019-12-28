@@ -103,8 +103,41 @@ export function setProperty(dom, name, value, oldValue, isSvg) {
     return;
   }
 
+  // TODO.
   if (name[0] === 'o' && name[1] === 'n') {
+    let useCapture = name !== (name = name.replace(/Capture$/, ''));
+		let nameLower = name.toLowerCase();
+		name = (nameLower in dom ? nameLower : name).slice(2);
 
+		if (value) {
+			if (!oldValue) dom.addEventListener(name, eventProxy, useCapture);
+			(dom._listeners || (dom._listeners = {}))[name] = value;
+		} else {
+			dom.removeEventListener(name, eventProxy, useCapture);
+    }
+    return;
+  }
+
+  // TODO.
+  if (typeof value !== 'function' && name !== 'dangerouslySetInnerHTML') {
+    if (name !== (name = name.replace(/^xlink:?/, ''))) {
+			if (value == null || value === false) {
+				dom.removeAttributeNS(
+					'http://www.w3.org/1999/xlink',
+					name.toLowerCase()
+				);
+			} else {
+				dom.setAttributeNS(
+					'http://www.w3.org/1999/xlink',
+					name.toLowerCase(),
+					value
+				);
+			}
+		} else if (value == null || value === false) {
+			dom.removeAttribute(name);
+		} else {
+			dom.setAttribute(name, value);
+		}
   }
 
 }
