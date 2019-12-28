@@ -1,6 +1,13 @@
 import { Component } from '../component/componentClass';
 import { assign } from '../utils/obj';
-import { invokeWillMountLifecycle } from '../utils/invokeLifecycle';
+import {
+  invokeWillMountLifecycle,
+  invokeDidMountLifecycle,
+  invokeWillReceivePropsLifecycle,
+  invokeWillUpdateLifecycle,
+  invokeDidUpdateLifecycle,
+} from '../utils/invokeLifecycle';
+import { toChildArray } from './children';
 
 
 /**
@@ -41,7 +48,7 @@ const diff = (
   /**
    * TODO:.DO NOT KNOW WHY.
    */
-  // if ((tmp = options._diff)) tmp(newVNode);
+  if ((tmp = options._diff)) tmp(newVNode);
 
   try {
     outer: {
@@ -122,23 +129,67 @@ const diff = (
         // invoke pre-render lifecycle methods.UPDATE SOURCE CODE.
         if (isNew) {
           invokeWillMountLifecycle(c);
-
-          if (c.componentDidMount !== null) {
-            c._renderCallbacks.push(c.componentDidMount);
-          }
+          invokeDidMountLifecycle(c);
         } else {
-          const force = c._force;
-          if (newType.getDerivedStateFromProps === null && force === null && c.componentWillReceiveProps !== null) {
-            c.componentWillReceiveProps(newProps, cctx);
+          invokeWillReceivePropsLifecycle(c, newType, cctx);
+
+          // check whether or not component should update
+          if (!c._force && c.shouldComponentUpdate !== null && c.shouldComponentUpdate(newProps, c._nextState, cctx) === false) {
+            c.props = newProps;
+            c.state = c._nextState;
+            c._dirty = false;
+            c._vnode = newVNode;
+            newVNode._dom = oldVNode._dom;
+            newVNode._children = oldVNode._children;
+            if (c._renderCallbacks.length) {
+              commitQueue.push(c);
+            }
+            for (tmp = 0; tmp < newVNode._children.length; tmp++) {
+              if (newVNode._children[tmp]) {
+                newVNode._children[tmp]._parent = newVNode;
+              }
+            }
+
+            // break whole block
+            break outer;
           }
-
-
-
+          invokeWillUpdateLifecycle(c, newProps, cctx);
+          invokeDidUpdateLifecycle(c, oldProps, oldState, snapshot);
         }
 
+        c.context = cctx;
+        c.props = newProps;
+        c.state = c._nextState;
 
+        if ((tmp = options._render)) tmp(newVNode);
+        c._dirty = false;
+        c._vnode = newVNode;
+        c._parentDom = parentDom;
 
+        tmp = c.render(c.props, c.state, c.context);
+        let isTopLevelFragment = tmp != null && tmp.type == Fragment && tmp.key == null;
+        newVNode._children = toChildArray(isTopLevelFragment ? tmp.props.children : tmp);
 
+        if (c.getChildContext !== null) {
+          context = assign(assign({}, context), c.getChildContext())
+        }
+
+        if (!isNew && c.getSnapshotBeforeUpdate !== null) {
+          snapshot = c.getSnapshotBeforeUpdate(oldProps, oldState);
+        }
+
+        // diff children
+        diffChildren(
+          parentDom,
+          newVNode,
+          oldVNode,
+          context,
+          isSvg,
+          excessDomChildren,
+          commitQueue,
+          oldDom,
+          isHydrating
+        );
 
       }
     }
