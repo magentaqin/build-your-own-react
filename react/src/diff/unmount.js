@@ -1,16 +1,6 @@
-import { applyRef } from './ref';
+import { applyRef } from '../utils/ref';
 import options from '../options';
-
-
-/**
- * remove dom node.
- * @param node the node to remove
- */
-export const removeNode = (node) => {
-  const parentNode = node.parentNode;
-  if (parentNode) parentNode.removeChild(node);
-}
-
+import { removeNode } from '../render/dom';
 
 /**
  * unmount a virtual node from the tree and apply DOM changes

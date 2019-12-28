@@ -1,9 +1,10 @@
 import { createVNode } from '../create-element';
 import { EMPTY_OBJ, EMPTY_ARR } from '../utils/constants';
-import { removeNode, unmount } from '../utils/node';
+import { unmount } from './unmount';
 import { getDOMSibling } from '../render/dom';
 import { diff } from './index';
 import { applyRef } from '../utils/ref';
+import { removeNode } from '../render/dom';
 
 /**
  * flatten the children of a virtual node.UPDATE SOURCE CODE.

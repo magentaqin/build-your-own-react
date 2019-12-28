@@ -7,7 +7,7 @@ import {
   invokeWillUpdateLifecycle,
   invokeDidUpdateLifecycle,
 } from '../utils/invokeLifecycle';
-import { toChildArray } from './children';
+import { toChildArray, diffChildren } from './children';
 
 
 /**
@@ -24,7 +24,7 @@ import { toChildArray } from './children';
  * @param isHydrating whether or not in hydration
  */
 
-const diff = (
+export const diff = (
   parentDom,
   newVNode,
   oldVNode,
@@ -190,6 +190,17 @@ const diff = (
           oldDom,
           isHydrating
         );
+
+        c.base = newVNode._dom;
+        if(c._renderCallbacks.length) {
+          commitQueue.push(c);
+        }
+        if (clearProcessingException) {
+          c._pendingError = c._processingException = null;
+        }
+        c._force = null;
+      } else {
+        // diff element nodes
 
       }
     }
