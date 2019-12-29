@@ -8,7 +8,8 @@ import {
   invokeDidUpdateLifecycle,
 } from '../utils/invokeLifecycle';
 import { toChildArray, diffChildren } from './children';
-
+import { diffElementNodes } from './element';
+import options from '../options';
 
 /**
  * diff two virtual nodes and apply changes to the DOM
@@ -201,11 +202,23 @@ export const diff = (
         c._force = null;
       } else {
         // diff element nodes
-
+        newVNode._dom = diffElementNodes(
+          oldVNode._dom,
+          newVNode,
+          oldVNode,
+          context,
+          isSvg,
+          excessDomChildren,
+          commitQueue,
+          isHydrating
+        );
       }
+      // TODO
+      if ((tmp = options.diffed)) tmp(newVNode);
     }
   } catch (e) {
-
+    options._catchError(e, newVNode, oldVNode);
   }
+  return newVNode._dom;
 }
 
