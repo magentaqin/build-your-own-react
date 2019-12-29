@@ -1,4 +1,6 @@
 import { EMPTY_ARR, EMPTY_OBJ } from "../utils/constants";
+import { diffProps } from './props';
+import { diffChildren } from './children';
 
 /**
  * diff two virtual nodes representing DOM element
@@ -93,13 +95,43 @@ export const diffElementNodes = (
       }
     }
 
-    diffProps()
+    diffProps(dom, newProps, oldProps, isSvg, isHydrating);
+
+		newVNode._children = newVNode.props.children;
+
+    // If the new vnode didn't have dangerouslySetInnerHTML, diff its children
+		if (!newHtml) {
+			diffChildren(
+				dom,
+				newVNode,
+				oldVNode,
+				context,
+				newVNode.type === 'foreignObject' ? false : isSvg,
+				excessDomChildren,
+				commitQueue,
+				EMPTY_OBJ,
+				isHydrating
+			);
+		}
 
 
-
-
-
+		// (as above, don't diff props during hydration)
+		if (!isHydrating) {
+			if (
+				'value' in newProps &&
+				newProps.value !== undefined &&
+				newProps.value !== dom.value
+			) {
+				dom.value = newProps.value == null ? '' : newProps.value;
+			}
+			if (
+				'checked' in newProps &&
+				newProps.checked !== undefined &&
+				newProps.checked !== dom.checked
+			) {
+				dom.checked = newProps.checked;
+			}
+		}
   }
-
-
+  return dom;
 }

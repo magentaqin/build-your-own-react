@@ -7,7 +7,7 @@ import { setProperty } from '../render/dom';
  * @param isSvg Whether or not this node is an SVG node
  * @param hydrate Whether or not we are in hydration mode
  */
-export const diffProps = (dom, newProps, oldProps, isSvg, hydrate)) => {
+export const diffProps = (dom, newProps, oldProps, isSvg, hydrate) => {
   let i;
 
 	for (i in oldProps) {
