@@ -6,7 +6,7 @@ import { Fragment } from '../create-element';
  * @param {*} props initial component props
  * @param {*} context initial context from parent components
  */
-const Component = (props, context) => {
+export function Component(props, context) {
   this.props = props;
   this.context = context;
 }
@@ -60,5 +60,3 @@ Component.prototype.forceUpdate = function(callback) {
  *
  */
 Component.prototype.render = Fragment;
-
-export default Component;
