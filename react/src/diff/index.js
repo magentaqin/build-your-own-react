@@ -1,4 +1,4 @@
-import { Component } from '../component/componentClass';
+import { Component } from '../component';
 import { assign } from '../utils/obj';
 import {
   invokeWillMountLifecycle,
