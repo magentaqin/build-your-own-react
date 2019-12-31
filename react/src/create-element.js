@@ -1,3 +1,5 @@
+import options from './options';
+
 /**
  *
  * @param {*} type node name or Component
@@ -25,14 +27,13 @@ export const createVNode = (type,props,key,ref) => {
   return vnode;
 }
 
-
 /**
  * create an virtual node.
  * @param type The node name or Component
  * @param props The properties of the virtual node
  * @param children The children of the virtual node
  */
-export const createElement = (type, props, children) => {
+export function createElement(type, props, children) {
   //exclude 'key' and 'ref' key values.
   const normalizedProps = {};
   const normalizedChildren = [];
@@ -44,13 +45,13 @@ export const createElement = (type, props, children) => {
   }
 
   // UPDATE SOURCE CODE. HAD BETTER NOT MUTATE PARAMS PASSED.
-  // treat arguments[2...n] as normalizedChildren
-  if (children !== null) {
-    for (i = 2; i < arguments.length; i++) {
-      normalizedChildren.push(arguments[i]);
-    }
-    normalizedProps.children = normalizedChildren;
+  for (let i = 2; i < arguments.length; i++) {
+    normalizedChildren.push(arguments[i]);
   }
+
+  if (children != null) {
+		normalizedProps.children = normalizedChildren;
+	}
 
   /**
    *  TODO:. defaultProps role?
@@ -58,7 +59,7 @@ export const createElement = (type, props, children) => {
   // type maybe string or undefined. filter out this case and apply defaultProps to normalizedProps
   if (typeof type === 'function' && type.defaultProps) {
     for (key in type.defaultProps) {
-      if (!normalizedProps[key]) {
+      if (normalizedProps[key] === undefined) {
         normalizedProps[key] = type.defaultProps[key];
       }
     }
