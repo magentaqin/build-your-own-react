@@ -25,7 +25,7 @@ export const diffElementNodes = (
 ) => {
   let i;
 	let oldProps = oldVNode.props;
-	let newProps = newVNode.props;
+  let newProps = newVNode.props;
 
 	// Tracks entering and exiting SVG namespace when descending through the tree.
   isSvg = newVNode.type === 'svg' || isSvg;
@@ -48,7 +48,7 @@ export const diffElementNodes = (
 		}
   }
 
-  if (dom === null) {
+  if (!dom) {
     if (newVNode.type === null) {
       return document.createTextNode(newProps);
     }
@@ -68,14 +68,15 @@ export const diffElementNodes = (
       dom.data = newProps;
     }
   } else if (newVNode !== oldVNode) {
-    if (excessDomChildren !== null) {
+    if (excessDomChildren) {
       excessDomChildren = EMPTY_ARR.slice.call(dom.childNodes);
     }
 
     oldProps = oldVNode.props || EMPTY_OBJ;
 
     let oldHtml = oldProps.dangerouslySetInnerHTML;
-    let newHtml = newProps.dangerouslySetInnerHTML;
+    let newHtml;
+    if (newProps) newHtml = newProps.dangerouslySetInnerHTML;
 
     // during hydration, props are not diffed at all (including dangerouslySetInnerHTML)
     if (!isHydrating) {
@@ -96,8 +97,7 @@ export const diffElementNodes = (
     }
 
     diffProps(dom, newProps, oldProps, isSvg, isHydrating);
-
-		newVNode._children = newVNode.props.children;
+    if (newVNode.props) newVNode._children = newVNode.props.children;
 
     // If the new vnode didn't have dangerouslySetInnerHTML, diff its children
 		if (!newHtml) {
@@ -118,6 +118,7 @@ export const diffElementNodes = (
 		// (as above, don't diff props during hydration)
 		if (!isHydrating) {
 			if (
+        newProps &&
 				'value' in newProps &&
 				newProps.value !== undefined &&
 				newProps.value !== dom.value
@@ -125,6 +126,7 @@ export const diffElementNodes = (
 				dom.value = newProps.value == null ? '' : newProps.value;
 			}
 			if (
+        newProps &&
 				'checked' in newProps &&
 				newProps.checked !== undefined &&
 				newProps.checked !== dom.checked

@@ -1,3 +1,4 @@
+import options from '../options'
 /** TODO.commitQueue and renderQueue difference.
  * @param commitQueue list of components which have callbacks to invoke in commitRoot
  * @param root
@@ -10,7 +11,7 @@ export const commitRoot = (commitQueue, root) => {
 			commitQueue = c._renderCallbacks;
 			c._renderCallbacks = [];
 			commitQueue.some(cb => {
-				cb.call(c);
+				cb && cb.call(c);
 			});
 		} catch (e) {
 			options._catchError(e, c._vnode);

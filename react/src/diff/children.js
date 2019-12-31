@@ -14,7 +14,7 @@ import { removeNode } from '../render/dom';
  * @param flattened an array that stores flattened children
  */
 export const toChildArray = (children, callback, flattened) => {
-  if (flattened === null) flattened = [];
+  if (!flattened) flattened = [];
 
   if (children === null || typeof children === 'boolean') {
     if (callback) {
@@ -56,7 +56,7 @@ export const toChildArray = (children, callback, flattened) => {
  * @param {*} childVNode child virtual node.
  */
 export const transformBeforeFlatten = (data, i) => (childVNode) => {
-  let { newParentVNode, oldVNode, oldChildrenLength, newDom } = data;
+  let { newParentVNode, oldVNode, oldChildrenLength, newDom, oldChildren } = data;
   let j;
   if (childVNode !== null) {
     childVNode._parent = newParentVNode;
@@ -79,7 +79,7 @@ export const transformBeforeFlatten = (data, i) => (childVNode) => {
 
     oldVNode = oldVNode || EMPTY_OBJ;
 
-    const { parentDom, context, isSvg, excessDomChildren, commitQueue, oldDom, isHydrating, firstChildDom, refs } = data;
+    let { parentDom, context, isSvg, excessDomChildren, commitQueue, oldDom, isHydrating, firstChildDom, refs, sibDom } = data;
     // TODO.morgh the old element into the new one. but don't append it to the dom.
     newDom = diff(
       parentDom,
@@ -108,14 +108,14 @@ export const transformBeforeFlatten = (data, i) => (childVNode) => {
       }
 
       // only components that return Fragment like VNodes will have a non-null _lastDOMChild.
-      if (childVNode._lastDomChild !== null) {
+      if (childVNode._lastDomChild) {
         newDom = childVNode._lastDomChild;
 
         // cleanup _lastDOMChild
         childVNode._lastDomChild = null;
       } else if (excessDomChildren === oldVNode || newDom !== oldDom || newDom.parentNode === null) {
         outer: {
-          if (oldDom === null || oldDom.parentNode !== parentDom) {
+          if (!oldDom || oldDom.parentNode !== parentDom) {
             parentDom.appendChild(newDom);
           } else {
             for (sibDom = oldDom, j = 0; (sibDom = sibDom.nextSibling) && j < oldChildrenLength; j += 2) {
@@ -186,7 +186,7 @@ export const diffChildren = (
   let oldChildren = (oldParentVNode && oldParentVNode._children) || EMPTY_ARR;
   let oldChildrenLength = oldChildren.length;
 
-  if (oldDom === EMPTY_OBJ) {
+  if (oldDom === EMPTY_OBJ && excessDomChildren) {
     oldDom = excessDomChildren[0];
   } else if (oldChildrenLength) {
     oldDom = getDOMSibling(oldParentVNode, 0);
@@ -194,12 +194,13 @@ export const diffChildren = (
     oldDom = null;
   }
 
-  i = 0;
+  let i = 0;
 
   // flatten children. UPDATE SOURCE CODE.
   const data = {
     newParentVNode,
     oldVNode,
+    oldChildren,
     oldChildrenLength,
     newDom,
     parentDom,
@@ -208,6 +209,7 @@ export const diffChildren = (
     isSvg,
     excessDomChildren,
     commitQueue,
+    sibDom,
     oldDom,
     isHydrating,
     refs,

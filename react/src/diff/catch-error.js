@@ -11,9 +11,10 @@ export const _catchError = (error, vnode) => {
 
   while (vnode._parent) {
     vnode = vnode._parent;
-    if (vnode._component && !component._processingException) {
+    component = vnode._component;
+    if (component && !component._processingException) {
       try {
-        if (component.constructor && component.constructor.getDerivedStateFromError !== null) {
+        if (component.constructor && component.constructor.getDerivedStateFromError) {
           component.setState(component.constructor.getDerivedStateFromError(error))
         } else {
           if (component.componentDidCatch) {

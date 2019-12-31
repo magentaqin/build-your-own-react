@@ -42,7 +42,6 @@ export const renderComponent = (component) => {
  */
 export const render = (vnode, parentDom, replaceNode) => {
   if (options._root) options._root(vnode, parentDom);
-
   let isHydrating = replaceNode === IS_HYDRATE;
   let oldVNode;
   if (isHydrating) {
@@ -59,6 +58,7 @@ export const render = (vnode, parentDom, replaceNode) => {
 
   // TODO???
   vnode = createElement(Fragment, null, [vnode]);
+  console.log(vnode)
 
   let commitQueue = [];
   const isSvg = parentDom.ownerSVGElement !== undefined;

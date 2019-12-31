@@ -10,6 +10,7 @@ import {
 import { toChildArray, diffChildren } from './children';
 import { diffElementNodes } from './element';
 import options from '../options';
+import { Fragment } from '../create-element';
 
 /**
  * diff two virtual nodes and apply changes to the DOM
@@ -92,7 +93,7 @@ export const diff = (
             c = new Component(newProps, cctx);
             newVNode._component = c;
             c.constructor = newType;
-            c.render = this.constructor(props, context);
+            c.render = doRender;
           }
 
           // TODO:.
@@ -115,11 +116,10 @@ export const diff = (
         if (c._nextState === null) {
           c._nextState = c.state;
         }
-        if (newType.getDerivedStateFromProps !== null) {
+        if (newType.getDerivedStateFromProps) {
           if (c._nextState === c.state) {
             c._nextState = assign({}, c._nextState)
           }
-
           assign(c._nextState, newType.getDerivedStateFromProps(newProps, c._nextState));
         }
 
@@ -129,7 +129,7 @@ export const diff = (
 
         // invoke pre-render lifecycle methods.UPDATE SOURCE CODE.
         if (isNew) {
-          invokeWillMountLifecycle(c);
+          invokeWillMountLifecycle(c, newType);
           invokeDidMountLifecycle(c);
         } else {
           invokeWillReceivePropsLifecycle(c, newType, cctx);
@@ -171,7 +171,7 @@ export const diff = (
         let isTopLevelFragment = tmp != null && tmp.type == Fragment && tmp.key == null;
         newVNode._children = toChildArray(isTopLevelFragment ? tmp.props.children : tmp);
 
-        if (c.getChildContext !== null) {
+        if (c.getChildContext) {
           context = assign(assign({}, context), c.getChildContext())
         }
 
@@ -222,3 +222,8 @@ export const diff = (
   return newVNode._dom;
 }
 
+
+/** The `.render()` method for a PFC backing instance. */
+function doRender(props, state, context) {
+	return this.constructor(props, context);
+}

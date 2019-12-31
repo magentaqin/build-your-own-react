@@ -40,7 +40,12 @@ module.exports = {
           ],
           plugins: [
             // ['@babel/plugin-transform-runtime'], // reuse babel injected helper https://babeljs.io/docs/en/babel-plugin-transform-runtime#technical-details
-            ['@babel/plugin-proposal-class-properties'], // add support for class properties
+            [
+							'@babel/plugin-transform-react-jsx',
+							{ pragma: 'h', pragmaFrag: 'Fragment' }
+						],
+            ['@babel/plugin-proposal-class-properties', { loose: true }], // add support for class properties
+            ['@babel/plugin-syntax-dynamic-import'],
           ],
         },
       },

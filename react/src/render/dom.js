@@ -29,8 +29,10 @@ export const getDOMSibling = (vnode, childIndex) => {
  * @param node the node to remove
  */
 export const removeNode = (node) => {
-  const parentNode = node.parentNode;
-  if (parentNode) parentNode.removeChild(node);
+  if (node) {
+    const parentNode = node.parentNode;
+    if (parentNode) parentNode.removeChild(node);
+  }
 }
 
 // set style. UPDATE SOURCE CODE.

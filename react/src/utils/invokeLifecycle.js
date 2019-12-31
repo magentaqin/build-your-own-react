@@ -1,5 +1,5 @@
 // invoke componentWillMount lifecycle
-export const invokeWillMountLifecycle = (c) => {
+export const invokeWillMountLifecycle = (c, newType) => {
   if (newType.getDerivedStateFromProps === null && c.componentWillMount !== null) {
     c.componentWillMount();
   }
