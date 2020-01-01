@@ -34,6 +34,7 @@ export const createVNode = (type,props,key,ref) => {
  * @param children The children of the virtual node
  */
 export function createElement(type, props, children) {
+  console.log('type', type)
   //exclude 'key' and 'ref' key values.
   const normalizedProps = {};
   const normalizedChildren = [];

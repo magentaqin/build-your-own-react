@@ -57,8 +57,9 @@ export const render = (vnode, parentDom, replaceNode) => {
   }
 
   // TODO???
+  console.log('called')
   vnode = createElement(Fragment, null, [vnode]);
-  console.log(vnode)
+  console.log('vnode', vnode)
 
   let commitQueue = [];
   const isSvg = parentDom.ownerSVGElement !== undefined;

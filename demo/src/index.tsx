@@ -1,6 +1,6 @@
-import { render, Component, h } from 'my-react';
+import myReact, { x } from 'my-react';
 
-class App extends Component {
+class App extends myReact.Component {
   render() {
     return (
       <h1>Hello World</h1>
@@ -8,4 +8,4 @@ class App extends Component {
   }
 }
 
-render(<App />, document.getElementById('root'));
+myReact.render(<App />, document.getElementById('root'));

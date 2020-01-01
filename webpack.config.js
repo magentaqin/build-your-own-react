@@ -25,7 +25,7 @@ module.exports = {
         options: {
           sourceMap: true,
           presets: [
-            ["@babel/preset-typescript", { jsxPragma: 'h'}], // add support for TS.
+            ["@babel/preset-typescript", { jsxPragma: 'x'}], // add support for TS.
             [
               "@babel/preset-env", // add support for latest JS.
               {
@@ -42,7 +42,7 @@ module.exports = {
             // ['@babel/plugin-transform-runtime'], // reuse babel injected helper https://babeljs.io/docs/en/babel-plugin-transform-runtime#technical-details
             [
 							'@babel/plugin-transform-react-jsx',
-							{ pragma: 'h', pragmaFrag: 'Fragment' }
+							{ pragma: 'x', pragmaFrag: 'Fragment' } //transform jsx to call x function(alias createElement)
 						],
             ['@babel/plugin-proposal-class-properties', { loose: true }], // add support for class properties
             ['@babel/plugin-syntax-dynamic-import'],

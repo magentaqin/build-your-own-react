@@ -13,6 +13,7 @@ I haven't figure out why it is necessary to put code there.
 
 
 ### Self-made 'React'
+I changed babel option pragma from 'h' to 'x'.
 
 **Description**
 It is actually a re-engineering verion of [Preact](https://github.com/preactjs/preact).
