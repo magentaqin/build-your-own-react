@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "jsx": "react",
+    "jsxFactory": "x",
+    "baseUrl": ".",
+    "target": "ES2018",
+    "moduleResolution": "node",
+    "paths": {
+      "my-react": ["./react/src/index.js"]
+    }
+  }
+}
