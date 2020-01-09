@@ -41,6 +41,7 @@ export const renderComponent = (component) => {
  * @param replaceNode attempt to re-use an existing DOM tree rooted at `replaceNode`
  */
 export const render = (vnode, parentDom, replaceNode) => {
+  console.log('-----RENDER----')
   if (options._root) options._root(vnode, parentDom);
   let isHydrating = replaceNode === IS_HYDRATE;
   let oldVNode;
@@ -56,10 +57,7 @@ export const render = (vnode, parentDom, replaceNode) => {
     }
   }
 
-  // TODO???
-  console.log('called')
   vnode = createElement(Fragment, null, [vnode]);
-  console.log('vnode', vnode)
 
   let commitQueue = [];
   const isSvg = parentDom.ownerSVGElement !== undefined;
@@ -86,6 +84,8 @@ export const render = (vnode, parentDom, replaceNode) => {
     isHydrating,
   );
 
+
+  console.log('VNODE in RENDER', vnode)
   commitRoot(commitQueue, vnode);
 }
 

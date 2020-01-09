@@ -26,6 +26,7 @@ export const diffElementNodes = (
   let i;
 	let oldProps = oldVNode.props;
   let newProps = newVNode.props;
+  console.log('------DIFF ELEMENT NODES------')
 
 	// Tracks entering and exiting SVG namespace when descending through the tree.
   isSvg = newVNode.type === 'svg' || isSvg;
@@ -52,7 +53,6 @@ export const diffElementNodes = (
     if (newVNode.type === null) {
       return document.createTextNode(newProps);
     }
-
     dom = isSvg ? document.createElementNS('http://www.w3.org/2000/svg', newVNode.type) : document.createElement(newVNode.type);
     // already created a new parent, so previously attached children can not be reused.
     excessDomChildren = null;
@@ -87,7 +87,6 @@ export const diffElementNodes = (
           oldProps[attributeName] = dom.attributes[i].value;
         }
       }
-
       if (newHtml || oldHtml) {
         // avoid re-applying the same '__html' if nothing changed between re-render
         if (!newHtml || !oldHtml || newHtml.__html !== oldHtml.__html) {
@@ -114,7 +113,6 @@ export const diffElementNodes = (
 			);
 		}
 
-
 		// (as above, don't diff props during hydration)
 		if (!isHydrating) {
 			if (
@@ -133,7 +131,8 @@ export const diffElementNodes = (
 			) {
 				dom.checked = newProps.checked;
 			}
-		}
+    }
   }
+
   return dom;
 }

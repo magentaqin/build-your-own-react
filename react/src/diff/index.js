@@ -12,6 +12,8 @@ import { diffElementNodes } from './element';
 import options from '../options';
 import { Fragment } from '../create-element';
 
+let count = 0;
+
 /**
  * diff two virtual nodes and apply changes to the DOM
  *
@@ -39,6 +41,8 @@ export const diff = (
 ) => {
   // TODO:. what is tmp?
   let tmp, newType = newVNode.type;
+  count++;
+  console.log(`Diff time count: ${count}`, newVNode)
 
   /**
    * SECURITY WORK.
@@ -126,7 +130,6 @@ export const diff = (
         // assign props and state of `c` to oldProps and oldState
         oldProps = c.props;
         oldState = c.state;
-
         // invoke pre-render lifecycle methods.UPDATE SOURCE CODE.
         if (isNew) {
           invokeWillMountLifecycle(c, newType);
@@ -168,6 +171,7 @@ export const diff = (
         c._parentDom = parentDom;
 
         tmp = c.render(c.props, c.state, c.context);
+
         let isTopLevelFragment = tmp != null && tmp.type == Fragment && tmp.key == null;
         newVNode._children = toChildArray(isTopLevelFragment ? tmp.props.children : tmp);
 
@@ -219,6 +223,8 @@ export const diff = (
   } catch (e) {
     options._catchError(e, newVNode, oldVNode);
   }
+  console.log('vnode', newVNode)
+  console.log('****DIFF POPPED***')
   return newVNode._dom;
 }
 

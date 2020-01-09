@@ -1,5 +1,5 @@
 import options from '../options'
-/** TODO.commitQueue and renderQueue difference.
+/** call callback in c._renderCallbacks
  * @param commitQueue list of components which have callbacks to invoke in commitRoot
  * @param root
  */

@@ -155,6 +155,7 @@ export const transformBeforeFlatten = (data, i) => (childVNode) => {
       }
     }
     i++;
+    console.log('return child vnode', childVNode)
     return childVNode;
   }
 }
@@ -185,6 +186,7 @@ export const diffChildren = (
   let oldVNode, newDom, sibDom, firstChildDom, refs;
   let oldChildren = (oldParentVNode && oldParentVNode._children) || EMPTY_ARR;
   let oldChildrenLength = oldChildren.length;
+  console.log('----DIFF CHILDREN----')
 
   if (oldDom === EMPTY_OBJ && excessDomChildren) {
     oldDom = excessDomChildren[0];

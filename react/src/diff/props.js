@@ -8,6 +8,7 @@ import { setProperty } from '../render/dom';
  * @param hydrate Whether or not we are in hydration mode
  */
 export const diffProps = (dom, newProps, oldProps, isSvg, hydrate) => {
+	console.log('DIFF PROPS')
   let i;
 
 	for (i in oldProps) {
@@ -23,6 +24,7 @@ export const diffProps = (dom, newProps, oldProps, isSvg, hydrate) => {
 			i !== 'checked' &&
 			oldProps[i] !== newProps[i]
 		) {
+			console.log('SET PROPERTY')
 			setProperty(dom, i, newProps[i], oldProps[i], isSvg);
 		}
 	}

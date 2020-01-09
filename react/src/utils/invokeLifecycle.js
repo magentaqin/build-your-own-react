@@ -1,13 +1,13 @@
 // invoke componentWillMount lifecycle
 export const invokeWillMountLifecycle = (c, newType) => {
-  if (newType.getDerivedStateFromProps === null && c.componentWillMount !== null) {
+  if (!newType.getDerivedStateFromProps && c.componentWillMount) {
     c.componentWillMount();
   }
 }
 
 // invoke componentDidMount lifecycle
 export const invokeDidMountLifecycle = (c) => {
-  if (c.componentDidMount !== null) {
+  if (c.componentDidMount) {
     c._renderCallbacks.push(c.componentDidMount);
   }
 }
