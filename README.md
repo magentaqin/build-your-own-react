@@ -52,7 +52,7 @@ class App extends myReact.Component {
 myReact.render(<App />, document.getElementById('root'));
 ```
 
-This workflow below explains how a simply "Hello World" is rendered through `my-react`.
+This workflow below explains how a simply "Hello World" is rendered through `my-react`. ( You can directly open this link: http://static.breword.com/myreact-hello-world-workflow.png in new tab.)
 
 ![](http://static.breword.com/myreact-hello-world-workflow.png)
 
