@@ -84,8 +84,6 @@ export const render = (vnode, parentDom, replaceNode) => {
     isHydrating,
   );
 
-
-  console.log('VNODE in RENDER', vnode)
   commitRoot(commitQueue, vnode);
 }
 

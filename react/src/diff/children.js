@@ -155,7 +155,6 @@ export const transformBeforeFlatten = (data, i) => (childVNode) => {
       }
     }
     i++;
-    console.log('return child vnode', childVNode)
     return childVNode;
   }
 }

@@ -42,7 +42,7 @@ export const diff = (
   // TODO:. what is tmp?
   let tmp, newType = newVNode.type;
   count++;
-  console.log(`Diff time count: ${count}`, newVNode)
+  console.log(`**** DIFF CALLED****: ${count}`)
 
   /**
    * SECURITY WORK.
@@ -223,7 +223,6 @@ export const diff = (
   } catch (e) {
     options._catchError(e, newVNode, oldVNode);
   }
-  console.log('vnode', newVNode)
   console.log('****DIFF POPPED***')
   return newVNode._dom;
 }

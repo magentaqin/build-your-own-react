@@ -54,6 +54,8 @@ myReact.render(<App />, document.getElementById('root'));
 
 This workflow below explains how a simply "Hello World" is rendered through `my-react`.
 
+![](http://static.breword.com/myreact-hello-world-workflow.png)
+
 Basically, there are two steps.  Step one is to call `createElement` function and Step two is to call `render` function. 
 
 You can define babel-parser pragma option as `h`(Preact defines it as `h`) or anything you like. Here I define pragma as `x` in webpack.config.js and export  ` createElement` function as `x` in react/src/index.js.  Babel parser will call `x` (alias `createElement`), and pass the transformed jsx syntax to `createElement` function.
@@ -111,18 +113,20 @@ Before diff() is called, vnode is set to be `parentDom._children`, and new vnode
 
 2) parentDom.appendChild(newDom)
 
-See how the property values of  `vnode` change during the `rendering` process.
+See how the property values of  `vnode` change during the `rendering` process. As diff() is recursively called, the final vnode value is set after 1st diff popped.
 
-| vnode's property | createElement called 2nd time        | 4th diff popped | 3rd diff popped | 2nd diff popped | 1st diff popped |
-| ---------------- | ------------------------------------ | --------------- | --------------- | --------------- | --------------- |
-| props            | { children: [previousVnode]}         | "Hello World"   |                 |                 |                 |
-| type             | (props) => { return props.children } | null            |                 |                 |                 |
-| _children        | null                                 | null            |                 |                 |                 |
-| _component       | null                                 | null            |                 |                 |                 |
-| _depth           | 0                                    | 3               |                 |                 |                 |
-| _dom             | null                                 | null            |                 |                 |                 |
-| _lastDomChild    | null                                 | null            |                 |                 |                 |
-| _parent          | null                                 |                 |                 |                 |                 |
+| vnode's property | 4th diff popped | 3rd diff popped               | 2nd diff popped | 1st diff popped                     |
+| ---------------- | --------------- | ----------------------------- | --------------- | ----------------------------------- |
+| props            | "Hello World"   | { children: ["Hello World"] } | {}              | { children: [previousVnode]}        |
+| type             | null            | "h1"                          | f App()         | (props) => { return props.children} |
+| _children        | null            | [previousVnode]               | [previousVnode] | [previousVnode]                     |
+| _component       | null            | null                          | App             | Component                           |
+| _depth           | 3               | 2                             | 1               | 0                                   |
+| _dom             | null            | h1                            | null            | null                                |
+| _lastDomChild    | null            | null                          | h1              | null                                |
+| _parent          | nextVnode       | nextVnode                     | nextVnode       | null                                |
+
+Finally, `commitRoot` is called to trigger `componentDidMount` lifecycle that has been pushed to `c._renderCallbacks` queue before.
 
 ####Demo Two: Render List
 
@@ -139,6 +143,8 @@ If you define "copy and paste code" as `git clone` to this project, the answer i
 I changed babel option pragma from 'h' to 'x'.
 
 **2.The differences between `Preact` and `React`? Why do you choose `preact` instead of `react` to re-engineer?**
+
+https://preactjs.com/guide/v10/differences-to-react
 
 * The way to compile JSX.
 https://babeljs.io/docs/en/babel-preset-typescript
